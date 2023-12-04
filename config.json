@@ -4,19 +4,19 @@
     "Entrypoint": ["/entrypoint.sh", "run"],
     "Mounts": [
         {"Type": "bind",
-         "Source": "/var/lib/buttervolume",
+         "Source": "/mnt/buttervolume",
          "Destination": "/var/lib/buttervolume",
          "Options": ["rbind"]},
         {"Type": "bind",
-         "Source": "/var/lib/buttervolume/config",
+         "Source": "/mnt/buttervolume/config",
          "Destination": "/etc/buttervolume",
          "Options": ["rbind"]},
         {"Type": "bind",
-         "Source": "/var/lib/buttervolume/ssh",
+         "Source": "/mnt/buttervolume/ssh",
          "Destination": "/root/.ssh",
          "Options": ["rbind"]}
     ],
-        "PropagatedMount": "/var/lib/buttervolume",
+        "PropagatedMount": "/mnt/buttervolume",
     "Network": {
         "Type": "host"
     },

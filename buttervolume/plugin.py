@@ -49,7 +49,7 @@ if not os.path.exists(USOCKET):
         USOCKET = os.path.join(RUNPATH, "plugins", plugin["Id"], "btrfs.sock")
 
 TIMER = int(getconfig(config, "TIMER", 60))
-DTFORMAT = getconfig(config, "DTFORMAT", "%Y-%m-%dT%H:%M:%S.%f")
+DTFORMAT = "%F_%H-%M-%S"
 LOGLEVEL = getattr(logging, getconfig(config, "LOGLEVEL", "INFO"))
 
 logging.basicConfig(level=LOGLEVEL)
@@ -302,10 +302,13 @@ def volume_snapshot(req):
     """snapshot a volume in the SNAPSHOTS dir"""
     name = req["Name"]
     path = join(VOLUMES_PATH, name)
-    timestamped = "{}@{}".format(name, datetime.now().strftime(DTFORMAT))
-    snapshot_path = join(SNAPSHOTS_PATH, timestamped)
     if not os.path.exists(path):
         return {"Err": "No such volume: {}".format(name)}
+
+    timestamped = datetime.now().strftime(DTFORMAT)
+    os.makedirs(join(SNAPSHOTS_PATH, name), exist_ok=True)
+    snapshot_path = join(SNAPSHOTS_PATH, name, timestamped)
+
     try:
         btrfs.Subvolume(path).snapshot(snapshot_path, readonly=True)
     except Exception as e:
