@@ -1,0 +1,75 @@
+version: "3.9"
+
+services:
+  ubuntu:
+    image: ubuntu
+#    build:
+#      context: ../
+#      dockerfile: dockerfile/train.Dockerfile
+#      secrets:
+#        - gcloud.json
+      #  - id=gcloud.json,src=$HOME/.keys/gcloud-cs221.json
+    #container_name: optuna_worker
+    #ports:
+    #  - 8888:8888
+    volumes:
+      - ./volumes/ubuntu:/mnt/ubuntu
+    command: /bin/bash
+    #  - ./:/workspace
+    #  - diskcache:/mnt/diskcache
+    #  - artifacts:/mnt/artifacts
+#    healthcheck:
+#      test: curl --fail http://localhost || exit 1
+#      interval: 60s
+#      retries: 5
+#      start_period: 20s
+#      timeout: 10s
+#    environment:
+#      - JUPYTER_ENABLE_LAB=yes
+#      - GRANT_SUDO=yes
+#      - NB_UID=1000
+#      - NB_GID=100
+#      - CHOWN_HOME=yes
+#      - CHOWN_HOME_OPTS='-R'
+#      - CHOWN_EXTRA_OPTS='-R'
+#      - N_TRIALS=${N_TRIALS:-100}
+#      - N_PROCESSES=${N_PROCESSES:-2}
+#    networks:
+#      - isolated_network
+
+  postgres:
+    image: postgres:14-alpine
+    # Alfred for allowing more workers
+    command: postgres -c 'max_connections=400'
+    ports:
+      - ${POSTGRES_PORT:-5432}:5432
+    volumes:
+      - ./volumes/postgres1:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD:-need to set the password}
+      - POSTGRES_USER=${POSTGRES_USER:-need to set the user}
+      - POSTGRES_DB=${POSTGRES_DB:-optuna_db}
+#    networks:
+#      - isolated_network
+
+#volumes:
+#    optuna-postgres-bv:
+#      driver: anybox/buttervolume:HEAD
+##     Provide path to repository so lookup can provide the correct version of the volume according to committed hash
+##      driver_opts:
+##        o: "/mnt/flock/flock_finrl"
+#      #external: true
+#    artifacts-bv:
+#      driver: anybox/buttervolume:HEAD
+#    #diskcache:
+
+#networks:
+#  isolated_network:
+#    #external: true
+#    name: ${COMPOSE_PROJECT_NAME}
+
+#secrets:
+#  gcloud.json:
+#    file: ${HOME}/.keys/gcloud-cs221.json
+#  alpaca.json:
+#    file: ${HOME}/.keys/alpaca-paper.json
