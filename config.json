@@ -16,7 +16,7 @@
          "Destination": "/root/.ssh",
          "Options": ["rbind"]}
     ],
-        "PropagatedMount": "/mnt/buttervolume",
+        "PropagatedMount": "/var/lib/buttervolume",
     "Network": {
         "Type": "host"
     },
